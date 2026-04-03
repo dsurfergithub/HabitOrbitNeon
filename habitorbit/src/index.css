@@ -1,0 +1,144 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #050507;
+  --bg2: #0a0a0e;
+  --surface: #0d0d12;
+  --surface2: #141420;
+  --surface3: #1a1a28;
+  --border: #1e1e2e;
+  --border2: #2a2a3e;
+  --neon: #39ff14;
+  --neon-dim: #1a4a0a;
+  --neon-glow: 0 0 8px #39ff1488, 0 0 20px #39ff1433;
+  --neon-glow-sm: 0 0 4px #39ff1466, 0 0 10px #39ff1422;
+  --cyan: #00e5ff;
+  --cyan-dim: #00151a;
+  --danger: #ff3a3a;
+  --danger-dim: #1a0505;
+  --warn: #ffb800;
+  --warn-dim: #1a1000;
+  --rest: #8a6fff;
+  --rest-dim: #0d0a1a;
+  --text: #f0f0ff;
+  --text-glow: 0 0 8px rgba(240,240,255,0.4), 0 0 20px rgba(200,200,255,0.15);
+  --text2: #9090b0;
+  --text3: #3a3a5a;
+  --r: 8px;
+  --r-sm: 5px;
+  /* iOS safe area insets */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* prevent iOS bounce scroll interfering */
+  height: -webkit-fill-available;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  /* Prevent iOS text size auto-adjust */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Padding for iOS notch/home indicator */
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+
+/* SCANLINES */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.025) 2px,
+    rgba(0,0,0,0.025) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* GRID BACKGROUND */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(57,255,20,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57,255,20,0.025) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--neon-dim); border-radius: 2px; }
+
+/* Remove tap highlight on iOS */
+* { -webkit-tap-highlight-color: transparent; }
+
+/* Inputs/buttons: prevent iOS zoom on focus (font-size must be ≥ 16px on inputs) */
+input, select, textarea {
+  font-size: 16px !important;
+}
+
+/* Override for display inputs where we want smaller visual text */
+input[style*="font-size: 13px"],
+input[style*="font-size: 18px"] {
+  font-size: 16px !important;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes npulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up { animation: fadeUp 0.22s ease forwards; }
+
+/* ── MOBILE OVERRIDES (≤ 430px = iPhone 14 Pro Max width) ── */
+@media (max-width: 430px) {
+
+  /* Smaller base font so more fits */
+  body { font-size: 13px; }
+
+  /* Orbit grid cells slightly smaller to fit without scroll */
+  .orbit-cell { width: 10px !important; height: 10px !important; }
+
+  /* Stats: 2 cols on mobile */
+  .stats-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Trophies: 2 cols */
+  .trophies-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Remove clipPath on mobile — it clips content and causes visual glitches */
+  .clip-cyber { clip-path: none !important; }
+
+  /* Day-of-week labels in orbit: hide on very small screens */
+  .dow-labels { display: none !important; }
+}
